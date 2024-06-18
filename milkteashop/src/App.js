@@ -1,26 +1,23 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import DangNhap from './DangNhap/DangNhap';
-import DangKy from './DangKy/DangKy';
-import TrangChuChuCuaHang from './ChuCuaHang/TrangChu/TrangChuChuCuaHang';
-import TrangChuBenGiaoHang from './BenGiaoHang/TrangChu/TrangChuBenGiaoHang';
-import TrangChuKhachHang from './KhachHang/TrangChuKhachHang';
+import { Route, Routes } from 'react-router-dom'
+import DangNhap from "./containers/Public/DangNhap"
+import DangKy from "./containers/Public/DangKy"
+import TrangChuChuCuaHang from "./containers/Public/TrangChuChuCuaHang"
+import TrangChuBenGiaoHang from "./containers/Public/TrangChuBenGiaoHang"
+import TrangChuKhachHang from "./containers/Public/TrangChuKhachHang"
+import {path} from './utils/constant'
 
-const App = () => {
+function App() {
   return (
-    <Router>
       <div>
         <Routes>
-          <Route path="/" element={<DangNhap />} />
-          <Route path="/dangky" element={<DangKy />} />
-          <Route path="/chucuahang" element={<TrangChuChuCuaHang />} />
-          <Route path="/bengiaohang" element={<TrangChuBenGiaoHang />} />
-          <Route path="/khachhang" element={<TrangChuKhachHang />} />
+          <Route path={path.DANGNHAP} element={<DangNhap />} />
+          <Route path={path.DANGKY} element={<DangKy />} />
+          <Route path={path.CHUCUAHANG} element={<TrangChuChuCuaHang />} />
+          <Route path={path.BENGIAOHANG} element={<TrangChuBenGiaoHang />} />
+          <Route path={path.KHACHHANG} element={<TrangChuKhachHang />} />
         </Routes>
       </div>
-    </Router>
   );
-};
+}
 
-export default App
+export default App;

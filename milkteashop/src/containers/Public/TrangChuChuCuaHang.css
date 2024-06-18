@@ -1,0 +1,1120 @@
+.TrangChuChuCuaHang{
+    background-color: #FFFFE0;
+    padding-bottom: 30px;
+
+}
+
+/* Header */
+.Heading {
+    width: 100%;
+    height: 15%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #ffd7ef;
+}
+.Img-logo{
+    width:6%;
+    margin-left: 10px;
+}
+.Info{
+    border: none;
+    margin: 15px;
+    background-color: #ffd7ef;
+    color:#e80889;
+    font-size: 25px;
+}
+.Info:hover{
+    opacity: 0.5;
+    cursor: pointer;
+}
+
+.Icon{
+    margin-right: 10px;
+}
+.fa-solid{
+    margin: 15px;
+}
+
+/* Xác Nhận Đăng Xuất*/
+.XacNhanDangXuat{
+    color: #e80889;
+    text-align: right;
+    margin-right: 30px;
+    margin-bottom: 20px;
+}
+
+.ConfirmLogOut{
+    border: none;
+    border-radius: 50px;
+    background-color: #e80889;
+    padding: 5px 20px;
+    font-size: 20px;
+    color: #ffd7ef;
+    margin-left: 5px;
+}
+.ConfirmLogOut:hover{
+    opacity: 0.5;
+    cursor: pointer;
+}
+
+/* Trang Chủ Bán Hang */
+.TrangChuBanHang{
+    color: #e80889;
+    text-align: center;
+    font-size: 50px;
+}
+.AtShop{
+    border: none;
+    border-radius: 50px;
+    background-color: #e80889;
+    padding: 10px 100px;
+    margin-left: 16%;
+    margin-bottom: 30px;
+    margin-top: 20px;
+    font-size: 30px;
+    color: #ffd7ef;
+}
+.Atshop-Choose{
+    border: none;
+    border-radius: 50px;
+    background-color: #ffd7ef;
+    padding: 10px 100px;
+    margin-left: 16%;
+    margin-bottom: 30px;
+    margin-top: 20px;
+    font-size: 30px;
+    color: #e80889;
+}
+.Ship{
+    border: none;
+    border-radius: 50px;
+    background-color: #e80889;
+    padding: 10px 100px;
+    margin-left: 18%;
+    margin-bottom: 30px;
+    margin-top: 20px;
+    font-size: 30px;
+    color: #ffd7ef;
+}
+.Ship-Choose{
+    border: none;
+    border-radius: 50px;
+    background-color: #ffd7ef;
+    padding: 10px 100px;
+    margin-left: 18%;
+    margin-bottom: 30px;
+    margin-top: 20px;
+    font-size: 30px;
+    color: #e80889;
+}
+.AtShop:hover{
+    opacity: 0.5;
+    cursor: pointer;
+}
+.Ship:hover{
+    opacity: 0.5;
+    cursor: pointer;
+}
+.DSĐH-AtShop-List{
+    list-style-type: none;
+}
+.DSĐH-AtShop{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 3px solid #e80889 ;
+    margin-top: 10px;
+    margin-right: 2%;
+}
+.DSĐH-AtShop-Info{
+    margin-left: 20px;
+    color:#e80889;
+}
+
+.XemChiTietDonHangAtShopbtn{
+    border: none;
+    border-radius: 50px;
+    background-color: #e80889;
+    padding: 5px 20px;
+    font-size: 30px;
+    color: #ffd7ef;
+}
+.XemChiTietDonHangAtShopbtn:hover{
+    opacity: 0.5;
+    cursor: pointer;
+}
+.ThanhToanAtShop1{
+    border: none;
+    border-radius: 50px;
+    background-color: #e80889;
+    padding: 5px 20px;
+    font-size: 30px;
+    margin-left: 20px;
+    margin-right: 20px;
+    color: #ffd7ef;
+}
+.ThanhToanAtShop1:hover{
+    opacity: 0.5;
+    cursor: pointer;
+}
+
+.BackToDSĐH-AtShopbtn{
+    border: none;
+    border-radius: 50px;
+    background-color: #e80889;
+    padding: 5px 20px;
+    margin-left: 48%;
+    margin-bottom: 30px;
+    margin-top: 20px;
+    font-size: 30px;
+    color: #ffd7ef;
+}
+.BackToDSĐH-AtShopbtn:hover{
+    opacity: 0.5;
+    cursor: pointer;
+}
+
+
+
+/* Danh Sách Đơn Hàng Ship Cần Xác Nhận */
+.DSĐH-Ship-List{
+    list-style-type: none;
+}
+.DSĐH-Ship{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 3px solid #e80889 ;
+    margin-top: 10px;
+    margin-right: 2%;
+}
+.DSĐH-Ship-Info{
+    margin-left: 20px;
+    color:#e80889;
+}
+.DSĐH-Ship-btn{
+    display: inline;
+}
+.XemChiTietDonHangShipbtn{
+    border: none;
+    border-radius: 50px;
+    background-color: #e80889;
+    padding: 5px 20px;
+    font-size: 30px;
+    color: #ffd7ef;
+}
+.XemChiTietDonHangShipbtn:hover{
+    opacity: 0.5;
+    cursor: pointer;
+}
+.ThanhToanShip{
+    border: none;
+    border-radius: 50px;
+    background-color: #e80889;
+    padding: 5px 20px;
+    font-size: 30px;
+    margin-left: 20px;
+    margin-right: 20px;
+    color: #ffd7ef;
+}
+.ThanhToanShip:hover{
+    opacity: 0.5;
+    cursor: pointer;
+}
+.BackToDSĐH-Shipbtn{
+    border: none;
+    border-radius: 50px;
+    background-color: #e80889;
+    padding: 5px 20px;
+    margin-left: 10%;
+    margin-bottom: 30px;
+    margin-top: 20px;
+    font-size: 30px;
+    color: #ffd7ef;
+}
+.BackToDSĐH-Shipbtn:hover{
+    opacity: 0.5;
+    cursor: pointer;
+}
+
+.Shipper-LuaChon{
+    display: block;
+    margin-left: 20%;
+}
+.Shipper-LuaChon-Select{
+    margin-bottom: 30px;
+    padding: 10px 20px;
+    color: #e80889;
+}
+
+/* Quản lý khách hàng */
+.QLKH-text{
+    font-size: 70px;
+    margin-left: 30%;
+    color:#e80889; 
+}
+.TKKH-text{
+    text-align: center  ;
+    font-size: 40px;
+    color:#e80889;
+}
+.SearchBar{
+    margin-left: 37%;
+    width: 25%;
+    height: 30px;
+    color: #e80889;
+}
+.KH-info{
+    font-size: 30px;
+    margin-left: 25%;
+    color: #e80889;
+}
+.XemLichSuMuaHangbtn{
+    border: none;
+    border-radius: 50px;
+    background-color: #e80889;
+    padding: 5px 20px;
+    margin-left: 25%;
+    margin-bottom: 30px;
+    margin-top: 20px;
+    font-size: 30px;
+    color: #ffd7ef;
+}
+.XemLichSuMuaHangbtn:hover{
+    opacity: 0.5;
+    cursor: pointer;
+}
+.XoaKHbtn{
+    border: none;
+    border-radius: 50px;
+    background-color: #e80889;
+    padding: 5px 20px;
+    margin-left: 7%;
+    margin-bottom: 30px;
+    margin-top: 20px;
+    font-size: 30px;
+    color: #ffd7ef;
+}
+.XoaKHbtn:hover{
+    opacity: 0.5;
+    cursor: pointer;
+}
+.XemDanhSachKHbtn{
+    border: none;
+    border-radius: 50px;
+    background-color: #e80889;
+    padding: 5px 20px;
+    margin-left: 35%;
+    margin-bottom: 30px;
+    margin-top: 20px;
+    font-size: 30px;
+    color: #ffd7ef;
+}
+.XemDanhSachKHbtn:hover{
+    opacity: 0.5;
+    cursor: pointer;
+}
+
+/* Xem Danh Sách Khách Hàng */
+.DSKH-text{
+    color:#e80889;
+    text-align: center;
+    font-size: 50px;
+}
+.DSKH-list{
+    list-style-type: none;
+}
+.DSKH-list-elements{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-right: 20%;
+    padding-left: 10%;
+    margin-right: 3%;
+    border: 3px solid #e80889 ;
+    margin-bottom: 10px;
+
+}
+.DSKH-list-elements-info{
+    color: #e80889;
+}
+.XemChiTietKHbtn{
+    margin: 2%;
+    height: 40px;
+    border: none;
+    border-radius: 50px;
+    padding: 0px 20px;
+    font-size: 20px;
+    background-color: #e80889;
+    color:#ffd7ef;
+}
+.XemChiTietKHbtn:hover{
+    opacity: 0.5;
+    cursor: pointer;
+}
+
+/* Xem Lịch Sử Mua Hàng */
+.XemLichSuMuaHang-CCH{
+    padding: auto;
+}
+.LSMH-text{
+    color:#e80889;
+    text-align: center;
+    font-size: 50px;
+}
+.LichSuMuaHang-list{
+    list-style-type: none;
+}
+.LichSuMuaHang-list-elements{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 3px solid #e80889 ;
+    margin-right: 2%;
+    margin-bottom: 10px;
+
+}
+.LichSuMuaHang-list-elements-info{
+    margin-left: 5%;
+    color: #e80889;
+}
+.XemChiTietDonHangbtn{
+    margin: 2%;
+    height: 40px;
+    border: none;
+    border-radius: 50px;
+    padding: 0px 20px;
+    font-size: 20px;
+    background-color: #e80889;
+    color:#ffd7ef;
+}
+.XemChiTietDonHangbtn:hover{
+    opacity: 0.5;
+    cursor: pointer;
+}
+
+/* Xem Chi Tiết Đơn Hàng */
+.XemChiTietDonHangDaMua-CCH{
+    padding-top: 50px;
+    padding-bottom: 50px;
+}
+.XemHoaDonMuaHangbtn1{
+    border: none;
+    border-radius: 50px;
+    background-color: #e80889;
+    padding: 5px 20px;
+    margin-left: 10%;
+    margin-bottom: 30px;
+    margin-top: 20px;
+    font-size: 30px;
+    color: #ffd7ef;
+}
+.XemHoaDonMuaHangbtn1:hover{
+    opacity: 0.5;
+    cursor: pointer;
+}
+.BackToDSĐHbtn{
+    border: none;
+    border-radius: 50px;
+    background-color: #e80889;
+    padding: 5px 20px;
+    margin-left: 10%;
+    margin-bottom: 30px;
+    margin-top: 20px;
+    font-size: 30px;
+    color: #ffd7ef;
+}
+.BackToDSĐHbtn:hover{
+    opacity: 0.5;
+    cursor: pointer;
+}
+/* Quản lý bên giao hàng */
+.QLBGH-text{
+    font-size: 50px;
+    text-align: center;
+    color:#e80889; 
+}
+.TKNVGH-text{
+    font-size: 30px;
+    text-align: center;
+    color:#e80889;
+}
+.NVGH-info{
+    font-size: 30px;
+    margin-left: 25%;
+    color: #e80889;
+}
+.XemLichSuGiaoHangbtn{
+    border: none;
+    border-radius: 50px;
+    background-color: #e80889;
+    padding: 5px 20px;
+    margin-left: 38%;
+    margin-bottom: 30px;
+    margin-top: 20px;
+    font-size: 30px;
+    color: #ffd7ef;
+}
+.XemLichSuGiaoHangbtn:hover{
+    opacity: 0.5;
+    cursor: pointer;
+}
+.XoaNVGHbtn{
+    border: none;
+    border-radius: 50px;
+    background-color: #e80889;
+    color: #ffd7ef;
+    font-size: 20px;
+    padding: 10px 20px;
+    margin-left: 25%;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+.XoaNVGHbtn:hover{
+    opacity: 0.5;
+    cursor: pointer;
+}
+.ThemNVGHbtn{
+    border: none;
+    border-radius: 50px;
+    background-color: #e80889;
+    color: #ffd7ef;
+    font-size: 20px;
+    padding: 10px 20px;
+    margin-left: 20px;
+}
+.ThemNVGHbtn:hover{
+    opacity: 0.5;
+    cursor: pointer;
+}
+.ChinhSuaNVGHbtn{
+    border: none;
+    border-radius: 50px;
+    background-color: #e80889;
+    color: #ffd7ef;
+    font-size: 20px;
+    padding: 10px 20px;
+    margin-left: 20px;
+}
+.ChinhSuaNVGHbtn:hover{
+    opacity: 0.5;
+    cursor: pointer;
+}
+.XemDSNVGHbtn{
+    border: none;
+    border-radius: 50px;
+    background-color: #e80889;
+    color: #ffd7ef;
+    font-size: 20px;
+    padding: 10px 20px;
+    margin-left: 20px;  
+}
+.XemDSNVGHbtn:hover{
+    opacity: 0.5;
+    cursor: pointer;
+}
+
+/* Xem lịch sử giao hàng */
+.LSGH-text{
+    color:#e80889;
+    text-align: center;
+    font-size: 50px;
+}
+.LichSuGiaoHang-list{
+    list-style-type: none;
+}
+.LichSuGiaoHang-list-elements{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 3px solid #e80889 ;
+    margin-right: 2%;
+    margin-bottom: 10px;
+
+}
+.LichSuGiaoHang-list-elements-info{
+    margin-left: 5%;
+    color: #e80889;
+}
+
+/* Xem Chi Tiết Đơn Hàng đã giao */
+.XemChiTietDonHangDaGiao{
+    padding: 50px 0px;
+}
+/* Thêm NVGH */
+.ThemNVGH-text{
+    font-size: 50px;
+    margin-left: 32%;
+    color:#e80889;
+
+}
+.ConfirmThemNVGH{
+    border: none;
+    border-radius: 50px;
+    background-color: #e80889;
+    color: #ffd7ef;
+    font-size: 20px;
+    padding: 10px 20px;
+    margin-left: 49%;
+    margin-top: 20px;
+}
+.ConfirmThemNVGH:hover{
+    opacity: 0.5;
+    cursor: pointer;
+}
+
+.nvform-label{
+    margin-left: 35%;
+    display: block;
+    font-size: 20px;
+    color: #e80889
+
+}
+.nvform-text{
+    height: 25px;
+    width: 500px;
+    color:#e80889;
+    margin-left:35% ;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+/* CHỉnh sửa NVGH */
+.ConfirmChinhSuaNVGHbtn{
+    border: none;
+    border-radius: 50px;
+    background-color: #e80889;
+    color: #ffd7ef;
+    font-size: 20px;
+    padding: 10px 20px;
+    margin-left: 43%;
+}
+.ConfirmChinhSuaNVGHbtn:hover{
+    opacity: 0.5;
+    cursor: pointer;
+}
+.BackToQLBGHbtn{
+    border: none;
+    border-radius: 50px;
+    background-color: #e80889;
+    color: #ffd7ef;
+    font-size: 20px;
+    padding: 10px 20px;
+    margin-left: 40px;
+    margin-bottom: 30px;
+}
+.BackToQLBGHbtn:hover{
+    opacity: 0.5;
+    cursor: pointer;
+}
+/* Xem DS NVGH*/
+.DSNVGH-text{
+    color:#e80889;
+    text-align: center;
+    font-size: 50px;
+}
+.DSNVGH-list{
+    list-style-type: none;
+}
+.DSNVGH-list-elements{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 3px solid #e80889 ;
+    margin-right: 2%;
+    margin-bottom: 10px;
+
+}
+.DSNVGH-list-elements-info{
+    margin-left: 5%;
+    color: #e80889;
+}
+.XemChiTietNVGHbtn{
+    margin: 2%;
+    height: 40px;
+    border: none;
+    border-radius: 50px;
+    padding: 0px 20px;
+    font-size: 20px;
+    background-color: #e80889;
+    color:#ffd7ef;
+}
+.XemChiTietNVGHbtn:hover{
+    opacity: 0.5;
+    cursor: pointer;
+}
+
+/* Xem Chi Tiết NVGH */
+.XemChiTietNVGH-info{
+    font-size: 30px;
+    margin-left: 25%;
+    color: #e80889;
+    padding: 10px 0px;
+}
+.BackToDSNVGHbtn{
+    border: none;
+    border-radius: 50px;
+    background-color: #e80889;
+    padding: 5px 20px;
+    margin-left: 30px;
+    margin-bottom: 30px;
+    margin-top: 20px;
+    font-size: 30px;
+    color: #ffd7ef;
+}
+.BackToDSNVGHbtn:hover{
+    opacity: 0.5;
+    cursor: pointer;
+}
+/* Quản lý sản phẩm */
+.QLSP-text{
+    text-align: center;
+    font-size: 50px;
+    color:#e80889;
+}
+.TKSP-text{
+    text-align: center;
+    font-size: 40px;
+    color:#e80889;
+}
+
+.SP{
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+.SP-upload-img{
+    display: flex;
+    flex-direction: column;
+    justify-items: center;
+    align-items: center;
+}
+.SP-img{
+    height: 400px;
+    width: 400px;
+}
+.SP-info{
+    margin-left: 5%;
+}
+.SP-text-name{
+    display: flex;
+    justify-items: center;
+    align-items: center;
+    color:#e80889;
+    font-size: 50px;
+}
+.fa-pen-to-square{
+    margin-left: 20px;
+    font-size: 40px;
+}
+
+.SP-text{
+    color:#e80889;
+    padding: 5px;
+    padding-left: 0px;
+}
+
+.XemMenubtn{
+    border: none;
+    border-radius: 50px;
+    background-color: #e80889;
+    color: #ffd7ef;
+    font-size: 35px;
+    padding: 10px 50px;
+    margin-left: 38%;
+    margin-top: 40px;
+    margin-bottom: 10px
+}
+.XemMenubtn:hover{
+    opacity: 0.5;
+    cursor: pointer;
+}
+.XoaSPbtn{
+    border: none;
+    border-radius: 50px;
+    background-color: #e80889;
+    color: #ffd7ef;
+    font-size: 20px;
+    padding: 10px 20px;
+    margin-left: 20%;
+    margin-top: 30px;
+    margin-bottom: 30px
+}
+.ThemSPbtn{
+    border: none;
+    border-radius: 50px;
+    background-color: #e80889;
+    color: #ffd7ef;
+    font-size: 20px;
+    padding: 10px 20px;
+    margin-left: 10%;
+}
+.ChinhSuaSanPham1btn{
+    border: none;
+    border-radius: 50px;
+    background-color: #e80889;
+    color: #ffd7ef;
+    font-size: 20px;
+    padding: 10px 20px;
+    margin-left: 10%;
+}
+.XoaSPbtn:hover{
+    opacity: 0.5;
+    cursor: pointer;
+}
+.ThemSPbtn:hover{
+    opacity: 0.5;
+    cursor: pointer;
+}
+.ChinhSuaSanPham1btn:hover{
+    opacity: 0.5;
+    cursor: pointer;
+}
+/* Chỉnh sửa sản phẩm */
+.ChinhSuaNVGH-text{
+    color: #e80889;
+    text-align: center;
+    font-size: 50px;
+}
+.ChinhSuaNVGH-elements{
+    display: flex;
+    justify-items: center;
+    align-items: center;
+    margin-bottom: 10px;
+}
+.ChinhSuaNVGH-elements-text{
+    color: #e80889;
+    margin-left: 30%;
+    margin-right: 3%;
+}
+.ChinhSuaNVGH-elements-input{
+    width: 400px;
+    height: 30px;
+}
+.ChinhSuaNVGH-elements-id{
+    color: #e80889;
+}
+
+/* Xem Menu của hàng */
+.MenuCuaHang-text{
+    text-align: center;
+    font-size: 50px;
+    color:#e80889;
+}
+.MenuCuaHang-list{
+    list-style-type: none;
+}
+.MenuCuaHang-list-elements{
+    display: flex;
+    align-items: center;
+    border: 3px solid #e80889 ;
+    margin-right: 2%;
+    margin-bottom: 10px;
+}
+.MenuCuaHang-SP-img{
+    height: 150px;
+    width: 150px;
+    margin-left: 2%;
+}
+.MenuCuaHang-SP-info{
+    margin-left: 2%;
+}
+.MenuCuaHang-text-name{
+    display: inline;
+    color:#e80889;
+    font-size: 30px;
+}
+
+.MenuCuaHang-SP-text{
+    width: 1000px;
+    color:#e80889;
+    font-size: 15px;
+}
+.ChinhSuaSanPham2btn{
+    border: none;
+    right: 0;
+    border-radius: 50px;
+    background-color: #e80889;
+    padding: 5px 20px;
+    margin-right: 20px;
+    font-size: 20px;
+    color: #ffd7ef;
+}
+.ChinhSuaSanPham2btn:hover{
+    opacity: 0.5;
+    cursor: pointer;
+}
+
+/* Chỉnh sửa sản phẩm */
+.ChinhSuaSanPham-text{
+    text-align: center;
+    font-size: 50px;
+    color:#e80889;
+}
+.SP-text-price{
+    display: flex;
+    justify-items: center;
+    align-items: center;
+    color:#e80889;
+}
+.SP-price-value{
+    height: 20px;
+    width: 20%;
+    margin-left: 10px;
+    margin-right: 5px;
+}
+.SP-text-value{
+    height: 30px;
+    width: 45%;
+    margin-left: 10px;
+}
+.XoaSanPhambtn{
+    border: none;
+    border-radius: 50px;
+    background-color: #e80889;
+    color: #ffd7ef;
+    font-size: 20px;
+    padding: 10px 20px;
+    margin-left: 10%;
+    margin-bottom: 30px;
+}
+.XacNhanChinhSuaSPbtn{
+    margin-top: 30px;
+    border: none;
+    border-radius: 50px;
+    background-color: #e80889;
+    color: #ffd7ef;
+    font-size: 20px;
+    padding: 10px 20px;
+    margin-left: 40%;
+}
+.XoaSanPhambtn:hover{
+    opacity: 0.5;
+    cursor: pointer;
+}
+.XacNhanChinhSuaSPbtn:hover{
+    opacity: 0.5;
+    cursor: pointer;
+}
+.BackToMenubtn{
+    border: none;
+    border-radius: 50px;
+    background-color: #e80889;
+    color: #ffd7ef;
+    font-size: 20px;
+    padding: 10px 20px;
+    margin-left: 10%;
+}
+.BackToMenubtn:hover{
+    opacity: 0.5;
+    cursor: pointer;
+}
+
+/* Thêm sản phẩm */
+.ThemSP{
+    color:#e80889;
+}
+.ThemSP-text{
+    font-size: 50px;
+    text-align: center;
+}
+.ThemSP-info{
+    padding-left: 40px;
+}
+.ThemSP-info-form{
+    margin-left: 80px;
+}
+.TenSPMoi{
+    height: 30px;
+    width: 300px;
+}   
+.GiaSPMoi{
+    height: 30px;
+    width: 300px;
+}
+.Upload-SP-img{
+    display: flex;
+    flex-direction: column;
+    justify-items: center;
+    align-items: center;
+    margin-left: 10%;
+    margin-right: 5%;
+}
+.fa-cloud-arrow-up{
+    font-size: 100px;
+}
+.Upload-SP-img .text{
+   font-size: 20px;
+}
+.ThemSP-info{
+    display: flex;
+    justify-items: center;
+    align-items: center;
+}
+.Confirm-ThemSP{
+    border: none;
+    border-radius: 50px;
+    font-size: 30px;
+    margin-left: 45%;
+    margin-top: 20px;
+    margin-bottom: 30px;
+    padding: 5px 20px;
+    background-color: #e80889;
+    color:#ffd7ef;
+}
+.Confirm-ThemSP:hover{
+    opacity: 0.5;
+    cursor: pointer;
+}
+
+/* Quản lý đơn hàng */
+.ĐH-info-elements{
+    margin-left: 10px;
+    color:#e80889;
+}
+
+.QLĐH-text{
+    text-align: center;
+    color:#e80889;
+    font-size: 50px;
+}
+.QLĐH-SearchBar{
+    margin-left: 37%;
+    width: 300px;
+    height: 30px;
+
+}
+.ThongTinDonHang{
+    margin-left: 30%;
+}
+.ĐH-info{
+    color:#e80889;
+}
+.XemHoaDonDonHangbtn{
+    border: none;
+    border-radius: 50px;
+    background-color: #e80889;
+    padding: 5px 20px;
+    margin-bottom: 30px;
+    margin-top: 20px;
+    font-size: 30px;
+    color: #ffd7ef;
+}
+.XemHoaDonDonHangbtn:hover{
+    opacity: 0.5;
+    cursor: pointer;
+}
+.XemDanhSachDonHangbtn{
+    border: none;
+    border-radius: 50px;
+    background-color: #e80889;
+    padding: 5px 20px;
+    margin-left: 5%;
+    margin-bottom: 30px;
+    margin-top: 20px;
+    font-size: 30px;
+    color: #ffd7ef;
+}
+.XemDanhSachDonHangbtn:hover{
+    opacity: 0.5;
+    cursor: pointer;
+}
+
+/* Hiển thị Hóa Đơn */
+.HoaDon-text{
+    text-align: center;
+    font-size: 60px;
+    color: #e80889;
+}
+.HoaDon-info{
+    margin-left: 20%;
+    color:#e80889;
+}
+.HoaDon-list {
+    width:65%;
+    margin-left: 20%;
+    border-collapse: collapse;
+    text-align: center;
+}
+.HoaDon-list thead th {
+    font-weight: bold;
+    background-color: #f2f2f2;
+  }
+  
+  .HoaDon-list thead th,
+  .HoaDon-list td {
+    padding: 8px;
+    text-align: left;
+    border: 3px solid #e80889;
+
+  }
+  
+  .HoaDon-list-info-1{
+    width: 20%;
+  }
+  .HoaDon-list-info-2 {
+    width: 10%;
+  }
+  
+  .HoaDon-list-info-1 {
+    font-weight: bold;
+  }
+  
+  .HoaDon-list-info-2 {
+    font-weight: normal;
+  }
+
+.BackToQLDHbtn{
+    border: none;
+    border-radius: 50px;
+    background-color: #e80889;
+    padding: 5px 20px;
+    font-size: 30px;
+    margin-left: 50%;
+    margin-bottom: 30px;
+    margin-right: 20px;
+    color: #ffd7ef;
+}
+.BackToQLDHbtn:hover{
+    opacity: 0.5;
+    cursor: pointer;
+}
+
+/* Xem Danh Sách Đơn Hàng */
+.DSDH-text{
+    color:#e80889;
+    text-align: center;
+    font-size: 50px;
+}
+.XemDanhSachDonHang-Filter{
+    margin-left: 3% ;
+}
+.XemDanhSachDonHang-Filter-By-Day{
+    width: 150px;
+    height: 30px;
+    color: #e80889;
+}
+.DSDH-list{
+    list-style-type: none;
+}
+.DSDH-list-elements{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 3px solid #e80889 ;
+    margin-right: 2%;
+    margin-bottom: 10px;
+
+}
+.DSDH-list-elements-info{
+    margin-left: 5%;
+    color: #e80889;
+}
+.XemChiTietDonHang{
+    padding: 50px 0px;
+}
+
+.fa-check-to-slot{
+    font-size: 30px;
+}

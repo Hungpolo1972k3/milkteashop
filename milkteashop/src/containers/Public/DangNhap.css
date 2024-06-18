@@ -1,0 +1,87 @@
+.DangNhap{
+    border:3px solid #e80889;;
+    background-color: #ffd7ef;
+    display: flex;
+    font-family: Arial;
+}
+.Avatar-DangNhap{
+    width: 50%;
+    height: 50%
+}
+.title{
+    font-size: 80px;
+    color: #e80889
+}
+.title-2{
+    font-size: 30px;
+    color: #e80889;
+    margin-left: 25%;
+}
+.form-label{
+    display: block;
+    font-size: 30px;
+    margin: 4%;
+    color: #e80889
+}
+.form-text{
+    height: 30px;
+    width: 80%;
+    margin-left: 4%;
+}
+.fa-solid{
+    font-size: 25px;
+    margin-left: 10px;
+    color: #e80889;
+}
+.fa-solid:hover{
+    opacity: 0.5;
+    cursor: pointer;
+}
+.DangNhapbtn{
+    display: block;
+    margin: 10%;
+    margin-left: 20%;
+    border: none;
+    border-radius: 50px;
+    background-color:#e80889 ;
+    padding: 3% 12%;
+    font-size: 30px;
+    color: #ffd7ef;
+}
+.DangNhapbtn:hover{
+    opacity: 0.5;
+    cursor: pointer;
+}
+.LinktoDangKy{
+    text-decoration: underline;
+    color: #e80889;
+    font-size: 20px;
+    margin-left: 7%;
+    padding-bottom: 30px;
+}
+.LinktoDangKy:hover{
+    cursor: pointer;
+    opacity: 0.5;
+}
+.LinktoDangNhapBGH{
+    text-decoration: underline;
+    color: #e80889;
+    font-size: 20px;
+    margin-left: 20%;
+    padding-bottom: 30px;
+}
+.LinktoDangNhapBGH:hover{
+    cursor: pointer;
+    opacity: 0.5;
+}
+.LinktoDangNhapKH{
+    text-decoration: underline;
+    color: #e80889;
+    font-size: 20px;
+    margin-left: 27%;
+    padding-bottom: 30px;
+}
+.LinktoDangNhapKH:hover{
+    cursor: pointer;
+    opacity: 0.5;
+}
