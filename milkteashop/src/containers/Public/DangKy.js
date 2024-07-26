@@ -19,7 +19,7 @@ function DangKy(){
     const handleSubmit = async(event) =>{
         event.preventDefault();
         if(passwordCf !== password){
-            setErrMessage('Wrong Password !')
+            setErrMessage('Sai mật khẩu !')
         }else{
         let data = await apiRegister({username, password, fullname, address,phonenumber})
         if(data.data.err === 0){

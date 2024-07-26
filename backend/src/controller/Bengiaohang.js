@@ -46,3 +46,55 @@ export const handleGetAllDonHangByKey = async(req, res) =>{
         })
     }
 }
+
+export const handleXacNhanNhanDonHang = async(req, res) =>{
+    let id = req.query.id
+    let nvgh_id = req.query.nvgh_id
+    try {
+        let response = await bengiaohangService.xacNhanNhanDonHang(id, nvgh_id)
+            return res.status(200).json({
+                err: 0,
+                msg: 'OK',
+                response
+            })
+    } catch (error) {
+        return res.status(500).json({
+            err: -1,
+            msg: " " + error
+        })     
+    }
+}
+
+export const handleGiaoHangThanhCong = async(req, res) =>{
+    let id = req.query.id
+    try {
+        let response = await bengiaohangService.giaoHangThanhCong(id)
+            return res.status(200).json({
+                err: 0,
+                msg: 'OK',
+                response
+            })
+    } catch (error) {
+        return res.status(500).json({
+            err: -1,
+            msg: " " + error
+        })     
+    }
+}
+export const handleHuyDonHang = async(req, res) =>{
+    let id = req.query.id
+    try {
+        let response = await bengiaohangService.huyDonHang(id)
+            return res.status(200).json({
+                err: 0,
+                msg: 'OK',
+                response
+            })
+    } catch (error) {
+        return res.status(500).json({
+            err: -1,
+            msg: " " + error
+        })     
+    }
+}
+

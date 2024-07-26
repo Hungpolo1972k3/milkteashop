@@ -32,7 +32,7 @@ export const apiGetAllNVGH = () => {
     return axiosConfig.get("api/milkteashop/get-all-nvghs")
 }
 export const apiDeleteNVGH = (nvghId) => {
-    return axiosConfig.delete(`/api/milkteashop/delete-nvgh?id=${nvghId}`);
+    return axiosConfig.put(`/api/milkteashop/delete-nvgh?id=${nvghId}`);
   };
 export const apiEditNVGH = (id, fullname, address, phonenumber,username) => {
     return axiosConfig.put(`api/milkteashop/edit-nvgh?id=${id}&fullname=${fullname}&address=${address}&phonenumber=${phonenumber}&username=${username}`);
@@ -64,7 +64,7 @@ export const apiCreateProduct = (productname, productprice) => new Promise(async
     }
 })
 export const apiDeleteProduct = (productId) => {
-    return axiosConfig.delete(`/api/milkteashop/delete-product?id=${productId}`);
+    return axiosConfig.put(`/api/milkteashop/delete-product?id=${productId}`);
 };
 export const apiEditTTDHById = (hoadonid) => {
     return axiosConfig.put(`api/milkteashop/thanh-toan?id=${hoadonid}`);
@@ -72,3 +72,6 @@ export const apiEditTTDHById = (hoadonid) => {
 export const apiEditNVGHId = (hoadonid, newnvgh_id) => {
     return axiosConfig.put(`api/milkteashop/edit-nvgh-id?id=${hoadonid}&nvgh_id=${newnvgh_id}`);
 };
+export const apiGetAllHoaDonByTTDH = (trangthaidonhangId) =>{
+    return axiosConfig.get(`api/milkteashop/get-all-hoa-don-by-ttdh?trangthaidonhang=${trangthaidonhangId}`)
+}

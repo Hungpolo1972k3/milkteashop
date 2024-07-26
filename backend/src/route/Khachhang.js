@@ -12,6 +12,10 @@ router.post("/create-hoadon", userController.handleCreateHoaDon )
 router.get("/get-don-hang-by-id", userController.handleGetDonHangById)
 router.get("/get-hoa-don-by-id", userController.handleGetHoaDonById)
 router.get("/get-nvgh-by-id", userController.handleGetNVGHById)
-router.get("/get-all-hoa-dons", userController.handleGetAllHoaDon)
+router.get("/get-hoa-don-by-id", userController.handleGetHoaDonById)
 router.get("/get-user-info-by-id", userController.handleGetUserInfoById)
+
+router.get("/get-all-hoadons", userController.handleGetAllHoaDon)
+router.get("/get-hoa-don-by-user-id", userController.handleGetHoaDonByUserId)
+
 module.exports = router

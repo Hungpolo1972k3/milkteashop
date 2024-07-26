@@ -188,11 +188,30 @@ export const handleGetNVGHById = async(req, res) =>{
 }
 
 export const handleGetAllHoaDon = async(req, res) =>{
+        let khachhang_id = req.query.khachhang_id
         let trangthaidonhang = req.query.trangthaidonhang
-        let hoadons = await userService.getAllHoaDon(trangthaidonhang)
+        let hoadons = await userService.getAllHoaDon(khachhang_id,trangthaidonhang)
         return res.status(200).json({
             err: 0,
             msg: 'OK',
             hoadons
         })
     }
+    
+    export const handleGetHoaDonByUserId = async(req, res) =>{
+        try {
+            const id = req.query.id
+        const response = await userService.getHoaDonByUserId(id)
+        return res.status(200).json({
+            err: 0,
+            response
+        })
+    
+        } catch (error) {
+            return({
+                err: -1,
+                msg: "" + error
+            })
+        }
+    }
+

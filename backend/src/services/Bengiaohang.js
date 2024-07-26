@@ -13,7 +13,7 @@ export const loginnvghService = ({usernamenvgh, passwordnvgh}) => new Promise(as
         const token = isCorrectPassword && jwt.sign({username: response.username}, process.env.SECRET_KEY, {expiresIn: '7d'})
         resolve({
             err: token ? 0 : 2,
-            msg: token ? 'Login is successfully !' : response ? "Password is wrong !" :"Username is not found !",
+            msg: token ? 'Đăng nhập thành công !' : response ? "Sai mật khẩu !" :"Tài khoản không tồn tại !",
             token: token || null
         })
     } catch (error) {
@@ -48,3 +48,52 @@ export const getAllDonHangByKey = (inputId, trangthaidonhang) => new Promise(asy
     }
 })
 
+export const xacNhanNhanDonHang = (donhangId, nvgh_id) => new Promise(async(resolve, reject) => {
+    try {
+        const response = await db.hoadon.update({
+            nvgh_id: nvgh_id, trangthaidonhang: "Shipper đã nhận đơn"},
+            {
+                where: { id: donhangId},
+                raw: true
+            }
+        )
+    }catch(error){
+        reject(error)
+    }
+})
+
+export const giaoHangThanhCong = (donhangId) => new Promise(async(resolve, reject) => {
+    try {
+        const response = await db.hoadon.update({
+            trangthaidonhang: "Giao hàng thành công"},
+            {
+                where: { id: donhangId},
+                raw: true
+            }
+        )
+        return {
+            err: 0,
+            response
+        }
+    }catch(error){
+        reject(error)
+    }
+})
+
+export const huyDonHang = (donhangId) => new Promise(async(resolve, reject) => {
+    try {
+        const response = await db.hoadon.update({
+            nvgh_id: null, trangthaidonhang: "Đặt ship"},
+            {
+                where: { id: donhangId},
+                raw: true
+            }
+        )
+        return {
+            err: 0,
+            response
+        }
+    }catch(error){
+        reject(error)
+    }
+})

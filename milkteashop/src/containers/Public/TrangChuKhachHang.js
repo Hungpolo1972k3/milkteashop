@@ -64,11 +64,11 @@ function TrangChuKhachHang() {
     const handleTimKiemSanPham = async(event) =>{
         event.preventDefault()
         if(!inputTimKiemSanPham){
-            setErrTimKiemSanPham('Missing input parameter !')
+            setErrTimKiemSanPham('Bạn vui lòng nhập đầy đủ thông tin !')
         }else{
             let response = await apiGetProductByKey(inputTimKiemSanPham)
             if(response.data.product === null){
-                setErrTimKiemSanPham("The product is not found !")
+                setErrTimKiemSanPham("Sản phẩm không tồn tại !")
                 setProductInfo({})
                 setShowTab(false)
             }else{
@@ -129,7 +129,7 @@ function TrangChuKhachHang() {
     }
     const handleAddProductToShoppingCart = async(event) =>{
         if(!inputSize || !inputIce || !inputSize) {
-            setErrTimKiemSanPham('Missing input parameters')
+            setErrTimKiemSanPham('Bạn vui lòng nhập đầy đủ thông tin !')
         }else{
             event.preventDefault()
             const value = localStorage.getItem('persist:product');
@@ -146,7 +146,7 @@ function TrangChuKhachHang() {
             const response = await apiAddProductToShoppingCart(inputSize,inputSugar,inputIce,count,inputToppings,price,khachhang_id,sanpham_id)
             setArrChoosenProducts(prev => [...prev, response.data.response.response]);
             setArrProductNames(prev =>[...prev, product.productname]);
-            alert(response.data.response.msg)
+            setErrTimKiemSanPham(response.data.response.msg)
             setInputToppings([]); setInputIce(""); setInputSize(""); setInputSugar("")
         }
     }
@@ -163,6 +163,7 @@ function TrangChuKhachHang() {
       
         setTongtien(total);
     }
+
 
     //Xóa sán phẩm khỏi giỏ hàng
     const handleXoaSP = async(a, b) =>{
@@ -214,7 +215,7 @@ function TrangChuKhachHang() {
         setHoaDonTamTinh(response.data.response)
         }else{
             if(!inputQuanHuyen || !inputDiaChiCuThe || !inputShippingPhone){
-                setErrChonShip('Missing input parameters !')
+                setErrChonShip('Bạn vui lòng nhập đầy đủ thông tin !')
             }else{
             const shippingcost = (inputQuanHuyen === "Hà Đông" ? 0 : 20000)
             const shippingaddress = inputDiaChiCuThe +',' + inputQuanHuyen
@@ -238,16 +239,18 @@ function TrangChuKhachHang() {
     // Hiển thị danh sách đơn hàng chờ giao
     const [arrDonHangChuaThanhToan, setArrDonHangChuaThanhToan] = useState([])
     const handleXemDonHangChuaThanhToan  = async() =>{
-        setActiveTab("XemDSDonHangChoGiao")
-        let response1 = await apiGetAllHoaDon('Tại Cửa Hàng')
-        let response2 = await apiGetAllHoaDon('Đặt ship')
-        let combinedArray = response1.data.hoadons.concat(response2.data.hoadons);
-        setArrDonHangChuaThanhToan(combinedArray);
         const value2 = localStorage.getItem('persist:auth');
             const parsedValue2 = JSON.parse(value2);
             const username = JSON.parse(parsedValue2.userInfo)
             let userinfo = await apiGetUserInfo(username)
             setThongTinKhachHang(userinfo.data.response)
+        setActiveTab("XemDSDonHangChoGiao")
+        let response1 = await apiGetAllHoaDon(userinfo.data.response.id,'Tại Cửa Hàng')
+        let response2 = await apiGetAllHoaDon(userinfo.data.response.id,'Đặt ship')
+        let response3 = await apiGetAllHoaDon(userinfo.data.response.id,'Shipper đã nhận đơn')
+        let response4 = await apiGetAllHoaDon(userinfo.data.response.id,'Giao hàng thành công')
+        let combinedArray = response1.data.hoadons.concat(response2.data.hoadons, response3.data.hoadons, response4.data.hoadons);
+        setArrDonHangChuaThanhToan(combinedArray);
     }                                                                       
     
     // Xem chi tiết hóa đơn chưa thanh tán
@@ -290,11 +293,12 @@ function TrangChuKhachHang() {
 
     // Xem Lịch sử mua hàng
     const [arrayDonHangDaMua, setArrayDonHangDaMua] = useState([])
-    const handleXemLichSuMuaHang = async() =>{
+    const handleXemLichSuMuaHang = async(khachhang_id) =>{
         setActiveTab('XemLichSuMuaHang')
-        const response = await apiGetAllHoaDon('Đã Thanh Toán')
+        const response = await apiGetAllHoaDon(khachhang_id,'Đã Thanh Toán')
         setArrayDonHangDaMua(response.data.hoadons)
     }
+    
     // Xem hóa đơn đơn hàng đã mua
     const [donHangDaMua, setDonHangDaMua] = useState({})
     const [arrayXemDonHangDaMua, setArrayXemDonHangDaMua] = useState([])
@@ -320,7 +324,20 @@ function TrangChuKhachHang() {
         }
         setListproductnameDaMua(JSON.parse(hoadon.listproductname))
     }
-    console.log(arrayXemDonHangDaMua)
+
+    const formatDateTime = (dateTimeString) => {
+        const dateTime = new Date(dateTimeString);
+        const options = {
+          hour: 'numeric',
+          minute: 'numeric',
+          second: 'numeric',
+          day: 'numeric',
+          month: 'numeric',
+          year: 'numeric'
+        };
+        const formattedDateTime = dateTime.toLocaleString('vi-VN', options);
+        return formattedDateTime;
+    }
     return(
         <div>
             <div className="KHPage-Bar">
@@ -352,7 +369,7 @@ function TrangChuKhachHang() {
                         arrProducts.map((item, index) => (
                             <li key={index}>
                             <div className="KHPage-Menu-Products">
-                                <img className="Products-Photo" src={item.productimageurl}/>
+                                <img className="Products-Photo" src={logo}/>
                                 <div className="KHPage-Menu-Products-Info">
                                     <h2>Tên Sản Phẩm: {item.productname}</h2>
                                     <h3>Giá tiền: {item.productprice} VNĐ</h3>
@@ -449,7 +466,7 @@ function TrangChuKhachHang() {
                         <h2> Tên Tài Khoản: {thongTinKhachHang.username}</h2>
                         <h2> Mã Tài Khoản : {thongTinKhachHang.id}</h2>
                     </div>
-                    <button className="XemLichSuMuaHangbtn-KH" onClick={handleXemLichSuMuaHang}>Xem Lịch Sử Mua Hàng</button>
+                    <button className="XemLichSuMuaHangbtn-KH" onClick={() =>{handleXemLichSuMuaHang(thongTinKhachHang.id)}}>Xem Lịch Sử Mua Hàng</button>
                 </div> 
             )}
 
@@ -463,7 +480,7 @@ function TrangChuKhachHang() {
                             <div className="XemLichSuMuaHang-list-elements">
                                 <div className="XemLichSuMuaHang-list-elements-info">
                                     <h2>Mã Đơn Hàng: {donhang.id}</h2>
-                                    <h2>Ngày Đặt Hàng: {Date(donhang.createAt)}</h2>
+                                    <h2>Ngày Đặt Hàng: {formatDateTime(donhang.updatedAt)}</h2>
                                     <h2>Hình Thức Thanh Toán: {donhang.nvgh_id === null ? "Trực tiếp tại cửa hàng" : "Đặt ship" }</h2>
                                     <h2>Tổng Tiền: {donhang.totalprice}</h2>
                                 </div>
@@ -605,6 +622,7 @@ function TrangChuKhachHang() {
                                 <th className="HoaDon-list-info-2">Size</th>
                                 <th className="HoaDon-list-info-2">Phần Trăm Đá</th>
                                 <th className="HoaDon-list-info-2">Phần Trăm Đường</th>
+                                <th className="HoaDon-list-info-1">Topping</th>
                                 <th className="HoaDon-list-info-2">Số lượng</th>
                                 <th className="HoaDon-list-info-1">Thành Tiền</th>
                             </tr>
@@ -617,6 +635,7 @@ function TrangChuKhachHang() {
                                 <td>{arrChoosenProducts[index].size}</td>
                                 <td>{arrChoosenProducts[index].ice}</td>
                                 <td>{arrChoosenProducts[index].sugar}</td>
+                                <td>{arrChoosenProducts[index].topping}</td>
                                 <td>{arrChoosenProducts[index].quantity}</td>
                                 <td>{arrChoosenProducts[index].price} VNĐ</td>
                             </tr>
@@ -642,7 +661,8 @@ function TrangChuKhachHang() {
                             <div className="XemDSDonHangChoGiao-list-elements">
                                 <div className="XemDSDonHangChoGiao-list-elements-info">
                                 <h2>Mã Đơn Hàng: {arrDonHangChuaThanhToan[index].id}</h2>
-                                <h2>Tổng Tiền: {arrDonHangChuaThanhToan[index].totalprice}</h2>
+                                <h2>Tổng Tiền: {arrDonHangChuaThanhToan[index].totalprice} VNĐ (dong)</h2>
+                                <h2>Ngày đặt hàng: {formatDateTime(donhang.updatedAt)}</h2>
                                 <h2>Trạng Thái Đơn Hàng: {arrDonHangChuaThanhToan[index].trangthaidonhang}</h2>
                                 </div>
                                 <button

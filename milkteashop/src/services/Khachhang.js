@@ -68,6 +68,9 @@ export const apiGetNVGHById = (nvghId) => {
     return axiosConfig.get(`api/milkteashop/get-nvgh-by-id?id=${nvghId}`)
 }
 
-export const apiGetAllHoaDon = (trangthaidonhangId) =>{
-    return axiosConfig.get(`api/milkteashop/get-all-hoa-dons?trangthaidonhang=${trangthaidonhangId}`)
+export const apiGetAllHoaDon = (khachhangId, trangthaidonhangId) =>{
+    return axiosConfig.get(`api/milkteashop/get-all-hoadons?khachhang_id=${khachhangId}&trangthaidonhang=${trangthaidonhangId}`)
+}
+export const apiGetHoaDonByUserId = (userId) => {
+    return axiosConfig.get(`api/milkteashop/get-hoa-don-by-user-id?khachhang_id=${userId}`)
 }

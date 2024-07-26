@@ -28,8 +28,11 @@ function DangNhap(){
     const [showDangNhap, setShowDangNhap] = useState(true)
     const handleSubmit = async(event) =>{
         event.preventDefault();
+        if(username === "CuaHangTraSua" & password === "Hungkute2k3@@@"){
+            navigate("/chucuahang")
+        }else{
         if(!username || !password){
-            setErrMessage("Missing inpput parameters !")
+            setErrMessage("Bạn vui lòng nhập đầy đủ thông tin !")
         }else{
             let data = await apiLogin({username, password})
             if(data.data.err === 0){
@@ -40,6 +43,7 @@ function DangNhap(){
                 setErrMessage(data.data.msg) 
             }
         }
+    }
     }  
     const handleLinkToDangNhapBGH = () =>{
         setShowDangNhap(false)
@@ -63,11 +67,11 @@ function DangNhap(){
     const handleSubmitNVGH = async(event) =>{
         event.preventDefault();
         if(!usernamenvgh || !passwordnvgh){
-            setErrMessage1("Missing input parameters !")
+            setErrMessage1("Bạn vui lòng nhập đầy đủ thông tin !")
         }else{
             let data1 = await apiLoginnvgh({usernamenvgh, passwordnvgh})
             if(data1.data.err === 0){
-                dispatch(action.login(usernamenvgh))
+                dispatch(action.nvghlogin(usernamenvgh))
                 navigate('/bengiaohang')
             }   
             if(data1.data.err !==0){

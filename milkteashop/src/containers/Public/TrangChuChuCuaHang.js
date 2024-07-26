@@ -1,9 +1,11 @@
 import React,{useState, useEffect} from "react"
 import { useNavigate } from 'react-router-dom';
 import avatar from "../../assets/Avatar.png"
-import {apiCreateNVGH, apiGetAllUsers, apiGetUserByKey,apiDeleteUser, apiGetNVGHByKey, apiGetAllNVGH,apiDeleteNVGH, apiGetAllProducts, apiGetProductByKey, apiEditProduct, apiCreateProduct, apiDeleteProduct, apiEditNVGH, apiEditTTDHById, apiEditNVGHId} from '../../services/Chucuahang'
-import {apiGetAllHoaDon, apiGetUserInfoById, apiGetDonHangById, apiGetProductById} from "../../services/Khachhang"
+import {apiCreateNVGH, apiGetAllUsers, apiGetUserByKey,apiDeleteUser, apiGetNVGHByKey, apiGetAllNVGH,apiDeleteNVGH, apiGetAllProducts, apiGetProductByKey, apiEditProduct, apiCreateProduct, apiDeleteProduct, apiEditNVGH, apiEditTTDHById, apiGetAllHoaDonByTTDH} from '../../services/Chucuahang'
+import {apiGetAllHoaDon, apiGetUserInfoById, apiGetDonHangById, apiGetProductById, apiGetNVGHById} from "../../services/Khachhang"
 import "./TrangChuChuCuaHang.css"
+import { apiGetHoaDonById } from "../../services/Khachhang";
+import { apiGetAllHoaDonByKey } from "../../services/Bengiaohang";
 import { useDispatch } from 'react-redux';
 import * as action from "../../store/actions"
 
@@ -21,7 +23,8 @@ function TrangChuChuCuaHang(){
     const [arrayPhoneNumber, setArrayPhoneNumber] = useState([])
     const handleGetListDonHangAtShop = async () => {
     try {
-        let response = await apiGetAllHoaDon("Tại Cửa Hàng");
+        setActiveTab(null)
+        let response = await apiGetAllHoaDonByTTDH("Tại Cửa Hàng");
         setArrayDonHangAtShop(response.data.hoadons);
         const ids = response.data.hoadons.map((item) => item.khachhang_id);
         const array = [];
@@ -84,13 +87,18 @@ function TrangChuChuCuaHang(){
     // Danh sách đơn hàng cần ship
     const [arrayDonHangShip, setArrayDonHangShip] = useState([]);
     const [arrayUsernameShip, setArrayUsernameShip] = useState([])
-    const [nvghList, setNvghList] = useState([])
+    const [arrayNVGHInfoFullName, setArrayNVGHInfoFullName]= useState([])
+    const [arrayNVGHInfoPhoneNumber, setArrayNVGHInfoPhoneNumber]= useState([])
     const handleGetListDonHangShip = async () => {
         handleTabClick('DanhSachDonHangShip')
     try {
-        let response = await apiGetAllHoaDon("Đặt ship");
-        setArrayDonHangShip(response.data.hoadons);
-        const ids = response.data.hoadons.map((item) => item.khachhang_id);
+        let response1 = await apiGetAllHoaDonByTTDH("Đặt ship");
+        let response2 = await apiGetAllHoaDonByTTDH("Shipper đã nhận đơn");
+        let response3 = await apiGetAllHoaDonByTTDH("Giao hàng thành công");
+        let response = response1.data.hoadons.concat(response2.data.hoadons, response3.data.hoadons)
+        setArrayDonHangShip(response);
+        const ids = response.map((item) => item.khachhang_id);
+        const nvghs = response.map((item) => item.nvgh_id)
         const array = [];
         const array2 = []
         for (let id of ids) {
@@ -99,33 +107,22 @@ function TrangChuChuCuaHang(){
             array2.push(response.data.response.phonenumber)
         }
         setArrayUsernameShip(array)
-        let nvghs = await apiGetAllNVGH()
-        setNvghList(nvghs.data.nvghs)
+        const array3 = []
+        const array4 = []
+        for (let nvgh of nvghs) {
+            let response = await apiGetNVGHById(nvgh);
+            array3.push(response.data.response.response.fullname);
+            array4.push(response.data.response.response.phonenumber)
+
+        }
+        setArrayNVGHInfoFullName(array3)
+        setArrayNVGHInfoPhoneNumber(array4)
     } catch (error) {
     }
     };
     useEffect(() => {
     handleGetListDonHangShip();
     }, []);
-
-    // Chọn NVGH
-    const [showNVGH, setShowNVGH] = useState(false)
-    const [inputNVGHFullnameList, setInputNVGHFullnameList] = useState([])
-    const handleGetInputNVGHFullname = (value, index) => {
-        setInputNVGHFullnameList((prevList) => {
-          const newList = [...prevList];
-          newList[index] = value;
-          return newList;
-        });
-      };
-    const [nvghChoosen, setNvghChoosen] = useState([])
-    const handleXacNhanChonNVGH = async (donhangId, index) => {
-        let response = await apiGetNVGHByKey(inputNVGHFullnameList[index]);
-        setNvghChoosen(response.data.nvgh);
-        let newnvgh_id = await apiEditNVGHId(donhangId, response.data.nvgh.id);
-        alert(newnvgh_id.data.response.msg);
-        setShowNVGH(true);
-      };
 
     // Xem chi tiết đơn hàng ship
     const handleXemChiTietDonHangShip = async(a) =>{
@@ -177,11 +174,11 @@ function TrangChuChuCuaHang(){
     }
     const handleTimKiemKH = async() =>{
         if(inputTimKiemKH === ''){
-            setErrTimKiem('Missing input parameter !')
+            setErrTimKiem('Bạn vui lòng nhập đầy đủ thông tin !')
         }else{
         let responses = await apiGetUserByKey(inputTimKiemKH)
         if(responses.data.user === null){
-            setErrTimKiem('User is not found !')
+            setErrTimKiem('Tài khoản không tồn tại !')
             setUserInfo({})
         }else{
         setErrTimKiem('')
@@ -229,16 +226,16 @@ function TrangChuChuCuaHang(){
     const handleSubmit = async(event) =>{
         event.preventDefault()
         if(!fullname || !phonenumber || !address || !username || !password || !passwordcf){
-            setErrMessage('Missing input parameters !')
+            setErrMessage('Bạn vui lòng nhập đầy đủ thông tin !')
         }else{
         if(passwordcf !== password){
-            setErrMessage('Wrong Password !')
+            setErrMessage('Mật khẩu không khớp !')
         }else{
             let data = await apiCreateNVGH({username, password, fullname, address, phonenumber})
             console.log(data)
             if(data.data.err === 0){
-                setActiveTab('QLBGH')
-                alert('Create a new account successfully !')
+    
+                setErrMessage('Thêm mới thành công 1 nhân viên giao hàng !')
                 setFullname(''); setPassword(''); setPasswordcf(''); setUsername('');setAddress(''); setPhonenumber(''); setErrMessage('')
             }   
             if(data.data.err !==0){
@@ -259,11 +256,11 @@ function TrangChuChuCuaHang(){
     const handleTimKiemNVGH = async(event)=>{
         event.preventDefault()
         if(inputTimKiemNVGH === ''){
-            setErrTimKiemNVGH('Missing input parameter !')
+            setErrTimKiemNVGH('Bạn vui lòng nhập đầy đủ thông tin !')
         }else{
         let nvghInfo = await apiGetNVGHByKey(inputTimKiemNVGH)
         if(nvghInfo.data.nvgh === null){
-            setErrTimKiemNVGH('The account is not found !')
+            setErrTimKiemNVGH('Tài khoản không tồn tại !')
             setNvghInfo({})
         }else{
         setNvghInfo(nvghInfo.data.nvgh)
@@ -309,7 +306,7 @@ function TrangChuChuCuaHang(){
     const handleXacNhanChinhSuaNVGH = async(event) =>{
         event.preventDefault()
         if(!nvghNewAddress ||!nvghNewAddress ||!nvghNewPhonenumber ||!nvghNewUsername){
-            setErrEditNVGH('Missing input paramater !')
+            setErrEditNVGH('Bạn vui lòng nhập đầy đủ thông tin !')
         }else{
         let response = await apiEditNVGH(nvghInfo.id, nvghNewFullname, nvghNewAddress, nvghNewPhonenumber, nvghNewUsername)
         alert(response.data.newnvgh.msg)
@@ -403,7 +400,81 @@ function TrangChuChuCuaHang(){
         setInputTimKiemSanPham('')
     }
 
-    
+    // QUản lý đơn hàng
+    const [arrayDonHang, setArrayDonHang] = useState([])
+    const handleQuanLyDonHang = async() =>{
+        setActiveTab('QLĐH')
+        let response0 = await apiGetAllHoaDonByTTDH("Tại Cửa Hàng");
+        let response1 = await apiGetAllHoaDonByTTDH("Đặt ship");
+        let response2 = await apiGetAllHoaDonByTTDH("Shipper đã nhận đơn");
+        let response3 = await apiGetAllHoaDonByTTDH("Giao hàng thành công");
+        let response4 = await apiGetAllHoaDonByTTDH("Đã Thanh Toán");
+        let response = response0.data.hoadons.concat(response1.data.hoadons,response2.data.hoadons, response3.data.hoadons, response4.data.hoadons)
+        setArrayDonHangShip(response);
+        setArrayDonHang(response)
+    }
+    const formatDateTime = (dateTimeString) => {
+        const dateTime = new Date(dateTimeString);
+        const options = {
+          hour: 'numeric',
+          minute: 'numeric',
+          second: 'numeric',
+          day: 'numeric',
+          month: 'numeric',
+          year: 'numeric'
+        };
+        const formattedDateTime = dateTime.toLocaleString('vi-VN', options);
+        return formattedDateTime;
+    }
+
+        // Xem chi tiết đơn hàng
+        const [khachHangFullName, setKhachHangFullName] = useState('')
+        const [hoaDonInfo, setHoaDonInfo] = useState({})
+        const [donHangInfo, setDonHangInfo] = useState([])
+        const [productName, setProductName] = useState([])
+        const handleXemHoaDonDonHang = async(hoadonId, khachhangId, listdonhang) =>{
+            setActiveTab("XemChiTietDonHang")
+            let khachhang = await apiGetUserInfoById(khachhangId)
+            setKhachHangFullName(khachhang.data.response.fullname)
+            let hoadon = await apiGetHoaDonById(hoadonId)
+            setHoaDonInfo(hoadon.data.response.response)
+            const array = []
+            const array2 = []
+            const donhangs = JSON.parse(listdonhang)
+            for (let donhang of donhangs) {
+                let response = await apiGetDonHangById(donhang)
+                array.push(response.data.response.response)
+                let response2 = await apiGetProductById(response.data.response.response.sanpham_id)
+                array2.push(response2.data.response.response.productname)
+            }
+            setProductName(array2)
+            setDonHangInfo(array)
+        }
+
+    //Xem lịch sử mua hàng
+    const [arrayDonHangDaMua, setArrayDonHangDaMua] = useState([])
+    const handleXemLichSuMuaHang = async(userId) =>{
+        setActiveTab('XemLichSuMuaHang')
+        let response1 = await apiGetAllHoaDon(userId, 'Tại Cửa Hàng')
+        let response2 = await apiGetAllHoaDon(userId,'Đặt ship')
+        let response3 = await apiGetAllHoaDon(userId,'Shipper đã nhận đơn')
+        let response4 = await apiGetAllHoaDon(userId,'Giao hàng thành công')
+        let response5 = await apiGetAllHoaDon(userId,'Đã thanh toán')
+        let response = response1.data.hoadons.concat(response2.data.hoadons,response3.data.hoadons,response4.data.hoadons,response5.data.hoadons)
+        setArrayDonHangDaMua(response)
+    }
+
+      // Xem lịch sử giao hàng
+      const [lichSuGiaoHang, setLichSuGiaoHang] = useState([])
+      const handleXemLichSuGiaoHang = async(nvghId) =>{
+          setActiveTab("XemLichSuGiaoHang")
+          let response1 = await apiGetAllHoaDonByKey(nvghId, 'Giao hàng thành công')
+          let response2 = await apiGetAllHoaDonByKey(nvghId, 'Đã thanh toán')
+          let response3 = await apiGetAllHoaDonByKey(nvghId, 'Shipper đã nhận đơn')
+          let response = response1.data.response.concat(response2.data.response, response3.data.response)
+          setLichSuGiaoHang(response)
+      }
+  
     return(
         <div className="TrangChuChuCuaHang">
             <div className="Heading">
@@ -418,7 +489,7 @@ function TrangChuChuCuaHang(){
                 <button className="Info" onClick={() => handleTabClick('QLSP')}>
                     Quản lý sản phẩm
                 </button>
-                <button className="Info" onClick={() => handleTabClick('QLĐH')}>
+                <button className="Info" onClick={handleQuanLyDonHang}>
                     Quản lý đơn hàng
                 </button> 
             </div>
@@ -442,7 +513,7 @@ function TrangChuChuCuaHang(){
             {activeTab === null &&(
                 <div>
                     <h1 className="TrangChuBanHang">Cửa Hàng Bán Trà Sữa NTH MilkTea</h1>
-                    <button className= "Atshop-Choose" onClick={()=>{handleTabClick(null)}} >Tại Cửa Hàng</button>
+                    <button className= "Atshop-Choose" onClick={()=>handleGetListDonHangAtShop} >Tại Cửa Hàng</button>
                     <button className="Ship"  onClick={handleGetListDonHangShip} >Đơn Hàng Ship</button>
                     <ul className="DSĐH-AtShop-List">
                         {arrayDonHangAtShop.map((product, index) => (
@@ -453,6 +524,7 @@ function TrangChuChuCuaHang(){
                                 <h2>Tổng Tiền: {product.totalprice} VNĐ</h2>
                                 <h2>Họ Và Tên Khách Hàng: {arrayUsername[index]}</h2>
                                 <h2>Số Điện Thoại: {arrayPhoneNumber[index]}</h2>
+                                <h2>Trạng thái đơn hàng: Tại Cửa Hàng</h2>
                                 </div>
                                 <div>
                                 <button className="XemChiTietDonHangAtShopbtn" onClick={() => handleXemChiTietDonHangAtShop(index)}>Xem Chi Tiết</button>
@@ -521,20 +593,9 @@ function TrangChuChuCuaHang(){
                                 <h2>Họ Và Tên Khách Hàng: {arrayUsernameShip[index]} ({donhang.shippingphone})</h2>
                                 <h2> Địa Chỉ Giao Hàng: {donhang.shippingaddress}</h2>
                                 <h2> Trạng Thái Đơn Hàng: {donhang.trangthaidonhang}</h2>
-                                {showNVGH && (
-                                    <h3>Nhân Viên Giao Hàng: {nvghChoosen.fullname} (Mã Nhân Viên: {nvghChoosen.id}, SĐT: {nvghChoosen.phonenumber})</h3>
-                                )}
+                                <h3>Nhân Viên Giao Hàng: {arrayNVGHInfoFullName[index]} (Mã Nhân Viên: {donhang.nvgh_id}, SĐT: {arrayNVGHInfoPhoneNumber[index]})</h3>
                             </div>
                             <div className="DSĐH-Ship-btn">
-                                    <div className="Shipper-LuaChon">
-                                    <select value={inputNVGHFullnameList[index]} onChange={(e) => handleGetInputNVGHFullname(e.target.value, index)} className="Shipper-LuaChon-Select">
-                                        <option disabled>Chọn Nhân Viên Giao Hàng</option>
-                                        {nvghList.map((nvgh, index) => (
-                                            <option key={index}>{nvgh.fullname}</option>
-                                        ))}
-                                    </select>
-                                        <i key={index} class="fa-solid fa-check-to-slot" onClick={() =>handleXacNhanChonNVGH(donhang.id, index)}></i>
-                                    </div>
                                 <button className="XemChiTietDonHangShipbtn" onClick={() => handleXemChiTietDonHangShip(index)} >Xem Chi Tiết</button>
                                 <button className="ThanhToanShip" onClick={() => handleThanhToanShip(donhang.id)}>Thanh Toán</button>
                             </div>
@@ -612,7 +673,7 @@ function TrangChuChuCuaHang(){
                     </div>
 
                     <div className="QLKHbtn">
-                        <button className="XemLichSuMuaHangbtn" onClick={()=>{handleTabClick('XemLichSuMuaHang')}}>
+                        <button className="XemLichSuMuaHangbtn" onClick={()=>{handleXemLichSuMuaHang(userInfo.id)}}>
                             Xem lịch sử mua hàng
                         </button>
                         <button className="XoaKHbtn" onClick={handleXoaKH} >
@@ -630,76 +691,23 @@ function TrangChuChuCuaHang(){
                 <div className="XemLichSuMuaHang-CCH">
                     <h1 className="LSMH-text">Lịch Sử Mua Hàng</h1>
                     <ul className="LichSuMuaHang-list">
-                        <li>
+                        {arrayDonHangDaMua.map((donhang, index) =>(
+                            <li key={index}>
                             <div className="LichSuMuaHang-list-elements">
                                 <div className="LichSuMuaHang-list-elements-info">
-                                    <h2>Mã Đơn Hàng: {}</h2>
-                                    <h2>Ngày Đặt Hàng: {}</h2>
-                                    <h2>Hình Thức Thanh Toán: {}</h2>
-                                    <h2>Tổng Tiền: {}</h2>
+                                    <h2>Mã Đơn Hàng: {donhang.id}</h2>
+                                    <h2>Ngày Đặt Hàng: {formatDateTime(donhang.createdAt)}</h2>
+                                    <h2>Trạng Thái Đơn Hàng: {donhang.trangthaidonhang}</h2>
+                                    <h2>Tổng Tiền: {donhang.totalprice} VNĐ (dong)</h2>
                                 </div>
                                 <button 
                                 className="XemChiTietDonHangbtn"
-                                onClick={()=>{handleTabClick('XemChiTietDonHangDaMua')}}
+                                onClick={()=>{handleXemHoaDonDonHang(donhang.id, donhang.khachhang_id, donhang.listdonhang_id)}}
                                 >Xem chi tiết</button>
                             </div>
                         </li>
-                        <li>
-                            <div className="LichSuMuaHang-list-elements">
-                                <div className="LichSuMuaHang-list-elements-info">
-                                    <h2>Mã Đơn Hàng: {}</h2>
-                                    <h2>Ngày Đặt Hàng: {}</h2>
-                                    <h2>Hình Thức Thanh Toán: {}</h2>
-                                    <h2>Tổng Tiền: {}</h2>
-                                </div>
-                                <button 
-                                className="XemChiTietDonHangbtn"
-                                onClick={()=>{handleTabClick('XemChiTietDonHangDaMua')}}
-                                >Xem chi tiết</button>
-                            </div>
-                        </li>
-                        <li>
-                            <div className="LichSuMuaHang-list-elements">
-                                <div className="LichSuMuaHang-list-elements-info">
-                                    <h2>Mã Đơn Hàng: {}</h2>
-                                    <h2>Ngày Đặt Hàng: {}</h2>
-                                    <h2>Hình Thức Thanh Toán: {}</h2>
-                                    <h2>Tổng Tiền: {}</h2>
-                                </div>
-                                <button 
-                                className="XemChiTietDonHangbtn"
-                                onClick={()=>{handleTabClick('XemChiTietDonHangDaMua')}}
-                                >Xem chi tiết</button>
-                            </div>
-                        </li>
-                        <li>
-                            <div className="LichSuMuaHang-list-elements">
-                                <div className="LichSuMuaHang-list-elements-info">
-                                    <h2>Mã Đơn Hàng: {}</h2>
-                                    <h2>Ngày Đặt Hàng: {}</h2>
-                                    <h2>Hình Thức Thanh Toán: {}</h2>
-                                    <h2>Tổng Tiền: {}</h2>
-                                </div>
-                                <button 
-                                className="XemChiTietDonHangbtn"
-                                onClick={()=>{handleTabClick('XemChiTietDonHangDaMua')}}
-                                >Xem chi tiết</button>
-                            </div>
-                        </li>
-                        <li>
-                            <div className="LichSuMuaHang-list-elements">
-                                <div className="LichSuMuaHang-list-elements-info">
-                                    <h2>Mã Đơn Hàng: {}</h2>
-                                    <h2>Ngày Đặt Hàng: {}</h2>
-                                    <h2>Hình Thức Thanh Toán: {}</h2>
-                                    <h2>Tổng Tiền: {}</h2>
-                                </div>
-                                <button 
-                                className="XemChiTietDonHangbtn"
-                                onClick={()=>{handleTabClick('XemChiTietDonHangDaMua')}}
-                                >Xem chi tiết</button>
-                            </div>
-                        </li>
+                        ))
+                        }
                     </ul>
                 </div>
             )}
@@ -729,33 +737,7 @@ function TrangChuChuCuaHang(){
                 </div>
             )}
 
-            {/* Xem Chi Tiết Đơn Hàng Đã Mua*/}
-            {activeTab ==='XemChiTietDonHangDaMua' &&(
-                <div className="XemChiTietDonHangDaMua-CCH">
-                    <div className="ThongTinDonHang">
-                        <h2 className="ĐH-info">Mã Đơn Hàng: {}</h2>
-                        <h2 className="ĐH-info">Ngày Đặt Hàng: {} </h2>
-                        <h2 className="ĐH-info">Thông tin Nhân Viên Giao Hàng </h2>
-                            <div className="ĐH-info-elements">
-                                <h3 >Họ và tên: {}</h3>
-                                <h3 >Số điện thoại: {}</h3>
-                                <h3 >Mã NVGH: {}</h3>
-                            </div>    
-                        <h2 className="ĐH-info">Địa chỉ Giao Hàng:{} </h2>
-                        <h2 className="ĐH-info">Trạng thái Đơn Hàng: {} </h2>
-                        <button 
-                        className="XemHoaDonMuaHangbtn1" 
-                        onClick={()=>{handleTabClick('XemHoaDonMuaHang-CCH')}}>
-                            Xem hóa đơn
-                        </button>
-                        <button 
-                        className="BackToDSĐHbtn" 
-                        onClick={()=>{handleTabClick('XemLichSuMuaHang')}}>
-                            Back
-                        </button>
-                    </div>
-                </div>
-            )}
+
             {/* Xem Hóa Đơn Đơn Hàng Của KhachHang */}
             {activeTab ==='XemHoaDonMuaHang-CCH' && (
                 <div className="XemHoaDonMuaHang-CCH">
@@ -863,7 +845,7 @@ function TrangChuChuCuaHang(){
                         <h2 className="NVGH-info">Số Điện Thoại : {nvghInfo.phonenumber} </h2>
                         <h2 className="NVGH-info">Địa chỉ : {nvghInfo.address} </h2>
                         <h2 className="NVGH-info">Tên tài khoản : {nvghInfo.username} </h2>
-                        <button className="XemLichSuGiaoHangbtn" onClick={()=> handleTabClick('XemLichSuGiaoHang')}>
+                        <button className="XemLichSuGiaoHangbtn" onClick={()=> handleXemLichSuGiaoHang(nvghInfo.id)}>
                             Xem lịch sử giao hàng
                         </button>
                     </div>
@@ -885,92 +867,28 @@ function TrangChuChuCuaHang(){
             )}
 
             {/* Xem Lịch Sử Giao Hàng */}
-            {activeTab === 'XemLichSuGiaoHang' && (
-                <div className="LichSuGiaoHang">
-                    <h1 className="LSGH-text">Lịch Sử Giao Hàng</h1>
-                    <ul className="LichSuGiaoHang-list">
-                        <li>
-                            <div className="LichSuGiaoHang-list-elements">
-                                <div className="LichSuGiaoHang-list-elements-info">
-                                    <h2>Mã Đơn Hàng: {}</h2>
-                                    <h2>Ngày Giao Hàng: {}</h2>
-                                    <h2>Tổng Tiền: {}</h2>
-                                </div>
-                                <button 
-                                className="XemChiTietDonHangbtn"
-                                onClick={()=>{handleTabClick('XemChiTietDonHangDaGiao')}}
-                                >Xem chi tiết</button>
+            {activeTab === "XemLichSuGiaoHang"&&(
+                <div className="XemLichSuGiaoHang">
+                <h1 className="LSGH-text">Lịch Sử Giao Hàng</h1>
+                <ul className="LichSuGiaoHang-list">
+                {lichSuGiaoHang.map((donhang, index) =>(
+                    <li key={index}>
+                        <div className="LichSuGiaoHang-list-elements">
+                            <div className="LichSuGiaoHang-list-elements-info">
+                                <h2>Mã Đơn Hàng: {donhang.id}</h2>
+                                <h2>Ngày Giao Hàng: {formatDateTime(donhang.updatedAt)}</h2>
+                                <h2>Tổng Tiền: {donhang.totalprice} VNĐ (dong)</h2>
                             </div>
-                        </li>
-                        <li>
-                            <div className="LichSuGiaoHang-list-elements">
-                                <div className="LichSuGiaoHang-list-elements-info">
-                                    <h2>Mã Đơn Hàng: {}</h2>
-                                    <h2>Ngày Giao Hàng: {}</h2>
-                                    <h2>Tổng Tiền: {}</h2>
-                                </div>
-                                <button 
-                                className="XemChiTietDonHangbtn"
-                                onClick={()=>{handleTabClick('XemChiTietDonHangDaGiao')}}
-                                >Xem chi tiết</button>
-                            </div>
-                        </li>
-                        <li>
-                            <div className="LichSuGiaoHang-list-elements">
-                                <div className="LichSuGiaoHang-list-elements-info">
-                                    <h2>Mã Đơn Hàng: {}</h2>
-                                    <h2>Ngày Giao Hàng: {}</h2>
-                                    <h2>Tổng Tiền: {}</h2>
-                                </div>
-                                <button 
-                                className="XemChiTietDonHangbtn"
-                                onClick={()=>{handleTabClick('XemChiTietDonHangDaGiao')}}
-                                >Xem chi tiết</button>
-                            </div>
-                        </li>
-                        <li>
-                            <div className="LichSuGiaoHang-list-elements">
-                                <div className="LichSuGiaoHang-list-elements-info">
-                                    <h2>Mã Đơn Hàng: {}</h2>
-                                    <h2>Ngày Giao Hàng: {}</h2>
-                                    <h2>Tổng Tiền: {}</h2>
-                                </div>
-                                <button 
-                                className="XemChiTietDonHangbtn"
-                                onClick={()=>{handleTabClick('XemChiTietDonHangDaGiao')}}
-                                >Xem chi tiết</button>
-                            </div>
-                        </li>
-                        <li>
-                            <div className="LichSuGiaoHang-list-elements">
-                                <div className="LichSuGiaoHang-list-elements-info">
-                                    <h2>Mã Đơn Hàng: {}</h2>
-                                    <h2>Ngày Giao Hàng: {}</h2>
-                                    <h2>Tổng Tiền: {}</h2>
-                                </div>
-                                <button 
-                                className="XemChiTietDonHangbtn"
-                                onClick={()=>{handleTabClick('XemChiTietDonHangDaGiao')}}
-                                >Xem chi tiết</button>
-                            </div>
-                        </li>
-                        <li>
-                            <div className="LichSuGiaoHang-list-elements">
-                                <div className="LichSuGiaoHang-list-elements-info">
-                                    <h2>Mã Đơn Hàng: {}</h2>
-                                    <h2>Ngày Giao Hàng: {}</h2>
-                                    <h2>Tổng Tiền: {}</h2>
-                                </div>
-                                <button 
-                                className="XemChiTietDonHangbtn"
-                                onClick={()=>{handleTabClick('XemChiTietDonHangDaGiao')}}
-                                >Xem chi tiết</button>
-                            </div>
-                        </li>
-
-                    </ul>
-                </div>
-            )}
+                            <button 
+                            className="XemChiTietDonHangbtn"
+                            onClick={()=>{handleXemHoaDonDonHang(donhang.id,donhang.khachhang_id, donhang.listdonhang_id)}}
+                            >Xem chi tiết</button>
+                        </div>
+                    </li>
+                ))}
+                </ul>
+            </div>
+             )}
 
             {/* Xem Chi Tiết Đơn Hàng đã giao */}
             {activeTab ==='XemChiTietDonHangDaGiao' &&(
@@ -1240,7 +1158,7 @@ function TrangChuChuCuaHang(){
                                 </div>
                                 <button 
                                 className="XemChiTietNVGHbtn"
-                                onClick={()=>{handleTabClick('XemLichSuGiaoHang')}}
+                                onClick={()=>{handleXemLichSuGiaoHang(item.id)}}
                                 >Xem lịch sử giao hàng</button>
                             </div>
                         </li>
@@ -1417,124 +1335,9 @@ function TrangChuChuCuaHang(){
                     </div>
                 )}
 
-            {/* Quản lý đơn hàng */}
-            {activeTab === 'QLĐH' && (
-                <div className="QLĐH">
-                    <h1 className="QLĐH-text">Quản lý Đơn Hàng</h1>
-                    <div>
-                        <input 
-                            id="TimKiemDonHang"
-                            className="QLĐH-SearchBar"
-                            name="TimKiemKDonHang"
-                            placeholder="Họ và tên/Số Điện Thoại/Mã Đơn Hàng"
-                        />
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                    </div>
-                    <div className="ThongTinDonHang">
-                        <h2 className="ĐH-info">Mã Đơn Hàng: {}</h2>
-                        <h2 className="ĐH-info">Ngày Đặt Hàng: {} </h2>
-                        <h2 className="ĐH-info">Thông tin Nhân Viên Giao Hàng </h2>
-                            <div className="ĐH-info-elements">
-                                <h3 >Họ và tên: {}</h3>
-                                <h3 >Số điện thoại: {}</h3>
-                                <h3 >Mã NVGH: {}</h3>
-                            </div>    
-                        <h2 className="ĐH-info">Địa chỉ Giao Hàng:{} </h2>
-                        <h2 className="ĐH-info">Trạng thái Đơn Hàng: {} </h2>
-                        <button className="XemHoaDonDonHangbtn" onClick={()=>{handleTabClick('XemHoaDonDonHang')}}>
-                            Xem hóa đơn
-                        </button>
-                        <button className="XemDanhSachDonHangbtn" onClick={()=>{handleTabClick('XemDanhSachDonHang')}}>
-                            Danh Sách Đơn Hàng
-                        </button>
-                    </div>
-                </div>
-            )}
-
-
-            {/* Xem Hóa Đơn Đon Hàng*/}
-            {activeTab ==='XemHoaDonDonHang' && (
-                <div className="HoaDon">
-                    <h1 className="HoaDon-text">Hóa Đơn</h1>
-                    <h2 className="HoaDon-info">Họ và Tên Khách Hàng: {}</h2>
-                    <h2 className="HoaDon-info">Số Điện Thoại: {}</h2>
-                    <h2 className="HoaDon-info">Địa Chỉ Nhận Hàng: {}</h2>
-                    <table className="HoaDon-list">
-                        <thead>
-                            <tr>
-                                <th className="HoaDon-list-info-2">STT</th>
-                                <th className="HoaDon-list-info-1">Tên Sản Phẩm</th>
-                                <th className="HoaDon-list-info-2">Size</th>
-                                <th className="HoaDon-list-info-2">Phần Trăm Đá</th>
-                                <th className="HoaDon-list-info-2">Phần Trăm Đường</th>
-                                <th className="HoaDon-list-info-2">Số lượng</th>
-                                <th className="HoaDon-list-info-2">Đơn Giá</th>
-                                <th className="HoaDon-list-info-2">Thành Tiền</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td>Trà Sữa Trân Châu</td>
-                                <td>L</td>
-                                <td>100%</td>
-                                <td>100%</td>
-                                <td>1</td>
-                                <td>30.000 VNĐ</td>
-                                <td>30.000 VNĐ</td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>{}</td>
-                                <td>{}</td>
-                                <td>{}%</td>
-                                <td>{}%</td>
-                                <td>{}</td>
-                                <td>{}VNĐ</td>
-                                <td>{}VNĐ</td>
-                            </tr>
-                            <tr>
-                                <td>3</td>
-                                <td>{}</td>
-                                <td>{}</td>
-                                <td>{}%</td>
-                                <td>{}%</td>
-                                <td>{}</td>
-                                <td>{}VNĐ</td>
-                                <td>{}VNĐ</td>
-                            </tr>
-                            <tr>
-                                <td>4</td>
-                                <td>{}</td>
-                                <td>{}</td>
-                                <td>{}%</td>
-                                <td>{}%</td>
-                                <td>{}</td>
-                                <td>{}VNĐ</td>
-                                <td>{}VNĐ</td>
-                            </tr>
-                            <tr>
-                                <td>5</td>
-                                <td>{}</td>
-                                <td>{}</td>
-                                <td>{}%</td>
-                                <td>{}%</td>
-                                <td>{}</td>
-                                <td>{}VNĐ</td>
-                                <td>{}VNĐ</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <h2 className="HoaDon-info">Tổng Tiền Đơn Hàng: {}</h2>
-                    <h2 className="HoaDon-info"> Hình thức thanh toán: </h2>
-                    <h2 className="HoaDon-info">Tiền Ship: {}</h2>
-                    <h2 className="HoaDon-info">Tổng Tiền: {}</h2>
-                    <button className="BackToQLDHbtn" onClick={()=>{handleTabClick('QLĐH')}}>Back</button>
-                </div>
-                )}
 
         {/* Xem Danh Sách Đơn Hàng */}
-        {activeTab === 'XemDanhSachDonHang' && (
+        {activeTab === 'QLĐH' && (
             <div className="XemDanhSachDonHang">
                 <h1 className="DSDH-text">Danh Sách Đơn Hàng</h1>
                 <div className="XemDanhSachDonHang-Filter">
@@ -1544,108 +1347,71 @@ function TrangChuChuCuaHang(){
                     <i class="fa-solid fa-filter"></i>
                 </div>   
                 <ul className="DSDH-list">
-                    <li>
+                    {arrayDonHang.map((donhang, index)=>(
+                        <li key={index}>
                         <div className="DSDH-list-elements">
                             <div className="DSDH-list-elements-info">
-                                <h2>Mã Đơn Hàng: {}</h2>
-                                <h2>Ngày Giao Hàng: {}</h2>
-                                <h2>Tổng Tiền: {}</h2>
+                                <h2>Mã Đơn Hàng: {donhang.id}</h2>
+                                <h2>Ngày Giao Hàng: {formatDateTime(donhang.updatedAt)}</h2>
+                                <h2>Tổng Tiền: {donhang.totalprice} VNĐ (dong)</h2>
+                                <h2>Trạng thái đơn hàng: {donhang.trangthaidonhang}</h2>
                             </div>
                             <button 
                             className="XemChiTietDonHangbtn"
-                            onClick={()=>{handleTabClick('XemChiTietDonHang')}}
+                            onClick={()=>{handleXemHoaDonDonHang(donhang.id, donhang.khachhang_id, donhang.listdonhang_id)}}
                             >Xem chi tiết</button>
                         </div>
                     </li>
-                    <li>
-                        <div className="DSDH-list-elements">
-                            <div className="DSDH-list-elements-info">
-                                <h2>Mã Đơn Hàng: {}</h2>
-                                <h2>Ngày Giao Hàng: {}</h2>
-                                <h2>Tổng Tiền: {}</h2>
-                            </div>
-                            <button 
-                            className="XemChiTietDonHangbtn"
-                            onClick={()=>{handleTabClick('XemChiTietDonHang')}}
-                            >Xem chi tiết</button>
-                        </div>
-                    </li>
-                    <li>
-                        <div className="DSDH-list-elements">
-                            <div className="DSDH-list-elements-info">
-                                <h2>Mã Đơn Hàng: {}</h2>
-                                <h2>Ngày Giao Hàng: {}</h2>
-                                <h2>Tổng Tiền: {}</h2>
-                            </div>
-                            <button 
-                            className="XemChiTietDonHangbtn"
-                            onClick={()=>{handleTabClick('XemChiTietDonHang')}}
-                            >Xem chi tiết</button>
-                        </div>
-                    </li>
-                    <li>
-                        <div className="DSDH-list-elements">
-                            <div className="DSDH-list-elements-info">
-                                <h2>Mã Đơn Hàng: {}</h2>
-                                <h2>Ngày Giao Hàng: {}</h2>
-                                <h2>Tổng Tiền: {}</h2>
-                            </div>
-                            <button 
-                            className="XemChiTietDonHangbtn"
-                            onClick={()=>{handleTabClick('XemChiTietDonHang')}}
-                            >Xem chi tiết</button>
-                        </div>
-                    </li>
-                    <li>
-                        <div className="DSDH-list-elements">
-                            <div className="DSDH-list-elements-info">
-                                <h2>Mã Đơn Hàng: {}</h2>
-                                <h2>Ngày Giao Hàng: {}</h2>
-                                <h2>Tổng Tiền: {}</h2>
-                            </div>
-                            <button 
-                            className="XemChiTietDonHangbtn"
-                            onClick={()=>{handleTabClick('XemChiTietDonHang')}}
-                            >Xem chi tiết</button>
-                        </div>
-                    </li>
+                    ))}
+                    
                 </ul>
             </div>
         )}
 
         {/* Xem Chi Tiết Đơn Hàng */}
         {activeTab ==='XemChiTietDonHang' &&(
-                <div className="XemChiTietDonHang">
-                    <div className="ThongTinDonHang">
-                        <h2 className="ĐH-info">Mã Đơn Hàng: {}</h2>
-                        <h2 className="ĐH-info">Ngày Đặt Hàng: {} </h2>
-                        <h2 className="ĐH-info">Thông tin Khách Hàng </h2>
-                            <div className="ĐH-info-elements">
-                                <h3 >Họ và tên: {}</h3>
-                                <h3 >Số điện thoại: {}</h3>
-                                <h3 >Địa Chỉ: {}</h3>
-                            </div>    
-                        <h2 className="ĐH-info">Hình thức Thanh Toán: {}</h2>
-                        <h2 className="ĐH-info">Thông tin Nhân Viên Giao Hàng </h2>
-                            <div className="ĐH-info-elements">
-                                <h3 >Họ và tên: {}</h3>
-                                <h3 >Số điện thoại: {}</h3>
-                                <h3 >Mã NVGH: {}</h3>
-                            </div>     
-                        <h2 className="ĐH-info">Địa chỉ Giao Hàng:{} </h2>
-                        <h2 className="ĐH-info">Trạng thái Đơn Hàng: {} </h2>
-                        <button 
-                        className="XemHoaDonMuaHangbtn1" 
-                        onClick={()=>{handleTabClick('XemHoaDonDonHang')}}>
-                            Xem hóa đơn
-                        </button>
-                        <button 
-                        className="BackToDSĐHbtn" 
-                        onClick={()=>{handleTabClick('XemDanhSachDonHang')}}>
-                            Back
-                        </button>
-                    </div>
-                </div>
+                <div className="XemHoaDonMuaHang">
+                <h1 className="HoaDon-text">Hóa Đơn</h1>
+                <h2 className="HoaDon-info">Họ và Tên Khách Hàng: {khachHangFullName}</h2>
+                <h2 className="HoaDon-info">Số Điện Thoại Nhận Hàng : {hoaDonInfo.shippingphone}</h2>
+                <h2 className="HoaDon-info">Địa Chỉ Nhận Hàng: {hoaDonInfo.shippingaddress}</h2>
+                <table className="HoaDon-list">
+                    <thead>
+                        <tr>
+                            <th className="HoaDon-list-info-2">STT</th>
+                            <th className="HoaDon-list-info-1">Tên Sản Phẩm</th>
+                            <th className="HoaDon-list-info-2">Size</th>
+                            <th className="HoaDon-list-info-2">Phần Trăm Đá</th>
+                            <th className="HoaDon-list-info-2">Phần Trăm Đường</th>
+                            <th className="HoaDon-list-info-1">Topping</th>
+                            <th className="HoaDon-list-info-2">Số lượng</th>
+                            <th className="HoaDon-list-info-1">Thành Tiền</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {donHangInfo.map((product, index)=>(
+                            <tr key = {index}>
+                            <td>{index + 1}</td>
+                            <td>{productName[index]}</td>
+                            <td>{donHangInfo[index].size}</td>
+                            <td>{donHangInfo[index].ice}</td>
+                            <td>{donHangInfo[index].sugar}</td>
+                            <td>{donHangInfo[index].topping}</td>
+                            <td>{donHangInfo[index].quantity}</td>
+                            <td>{donHangInfo[index].price} VNĐ</td>
+                        </tr>
+                        ))}
+                    </tbody>
+                </table>
+                <h2 className="HoaDon-info">Tổng Tiền : {hoaDonInfo.totalprice - hoaDonInfo.shippingcost} VNĐ (đồng)</h2>
+                <h2 className="HoaDon-info">Tiền Ship: {hoaDonInfo.shippingcost} VNĐ (đồng)</h2>
+                <h2 className="HoaDon-info">Tổng Tiền Đơn Hàng : {hoaDonInfo.totalprice} VNĐ (đồng)</h2>
+                <button 
+                className="BackToDSĐHbtn1" 
+                onClick={()=>{handleTabClick(null)}}>
+                    Back
+                </button>
+            </div>
             )}
         </div>    
     )

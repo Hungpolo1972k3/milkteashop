@@ -66,12 +66,13 @@ export const CreateNVGH = ({username, password, fullname, address, phonenumber})
                 fullname: fullname,
                 address: address,
                 phonenumber: phonenumber,
+                status: 1
             }
         })
         const token = response[1] && jwt.sign({username: response[0].username},process.env.SECRET_KEY, {expiresIn: '7d'})
         resolve({
             err: token ? 0 : 2,
-            msg: token ? 'Create a new account successfully !' : "This account is exist !",
+            msg: token ? 'Thêm mới nhân viên giao hàng thành công !' : "Tài khoản đã tồn tại !",
             token: token || null
         })
 
@@ -83,7 +84,7 @@ export const getNVGHByKey = (fullname) => {
     return new Promise(async(resolve, reject) =>{
         try {
             let nvgh = await db.bengiaohang.findOne({
-                where: {fullname: fullname},
+                where: {fullname: fullname, status: 1},
                 raw: true,
                 attributes: {
                     exclude: ['password']
@@ -112,14 +113,15 @@ export const getAllNVGH = () => {
 export const deleteNVGH = (nvghId) => {
     return new Promise(async(resolve, reject) =>{
         try {
-            let response = await db.bengiaohang.destroy({
+            let response = await db.bengiaohang.update({
+                status: 0
+            },{
                 where: { id: nvghId},
                 raw: true
               });
             resolve({
                 err: response === 1 ? 0 : 1,
-                msg: response === 1 ? 'Delete successfully!' : 'Failed to delete !',
-
+                msg: 'Xóa nhân viên giao hàng thành công!',
               });
         } catch (error) {
             reject(error)
@@ -140,7 +142,7 @@ export const editNVGH = (id, fullname, address, phonenumber,username ) => {
             })
             resolve({
                 err: 0,
-                msg: 'Update successfully !'
+                msg: 'Chỉnh sửa thông tin nhân viên giao hàng thành công !'
             })
         } catch (error) {
             reject(error)
@@ -152,7 +154,9 @@ export const editNVGH = (id, fullname, address, phonenumber,username ) => {
 export const getAllProducts = () => {
     return new Promise(async(resolve, reject) =>{
         try {
-            let products = await db.sanpham.findAll()
+            let products = await db.sanpham.findAll(
+                {where: {status: 1}}
+            )
             resolve(products)
         } catch (error) {
             reject(error)
@@ -163,7 +167,7 @@ export const getProductByKey = (productname) => {
     return new Promise(async(resolve, reject) =>{
         try {
             let product = await db.sanpham.findOne({
-                where: {productname: productname},
+                where: {productname: productname, status: 1},
                 raw: true,
             })
             resolve(product ? product : null)
@@ -184,7 +188,7 @@ export const editProduct = (id, productname, productprice) => {
             })
             resolve({
                 err: 0,
-                msg: 'Update successfully !'
+                msg: 'Chỉnh sửa thông tin sản phẩm thành công !'
             })
         } catch (error) {
             reject(error)
@@ -199,7 +203,8 @@ export const CreateProduct = (productname,productprice) => new Promise(async(res
             defaults: {
                 productname: productname,
                 productprice: productprice,
-                productimageurl: v4()
+                productimageurl: v4(),
+                status: 1
             }
         })
         resolve({
@@ -215,13 +220,14 @@ export const CreateProduct = (productname,productprice) => new Promise(async(res
 export const deleteProduct = (productId) => {
     return new Promise(async(resolve, reject) =>{
         try {
-            let response = await db.sanpham.destroy({
+            let response = await db.sanpham.update({
+                status: 0},{
                 where: { id: productId},
                 raw: true
               });
             resolve({
                 err: response === 1 ? 0 : 1,
-                msg: response === 1 ? 'Delete successfully!' : 'Failed to delete !',
+                msg: 'Sản phẩm đã bị xóa!',
 
               });
         } catch (error) {
@@ -266,3 +272,15 @@ export const editNVGHId = (hoadonid, newnvgh_id) => {
         }
     })
 }
+
+export const getAllHoaDonByTTDH = (trangthaidonhang) => new Promise(async (resolve, reject) => {
+    try {
+            let response = await db.hoadon.findAll({
+                    where: {trangthaidonhang: trangthaidonhang},
+                    raw: true
+                })
+        resolve(response)
+    } catch (error) {
+        reject(error);
+    }
+});

@@ -19,7 +19,7 @@ export const registerService = ({username, password, fullname, address, phonenum
         const token = response[1] && jwt.sign({username: response[0].username},process.env.SECRET_KEY, {expiresIn: '7d'})
         resolve({
             err: token ? 0 : 2,
-            msg: token ? 'Register is successfully !' : "Username is exist !",
+            msg: token ? 'Đăng ký tài khoản thành công !' : "Tài khoản đã tồn tại !",
             token: token || null
         })
 
@@ -38,7 +38,7 @@ export const loginService = ({username, password}) => new Promise(async(resolve,
         const token = isCorrectPassword && jwt.sign({username: response.username}, process.env.SECRET_KEY, {expiresIn: '7d'})
         resolve({
             err: token ? 0 : 2,
-            msg: token ? 'Login is successfully !' : response ? "Password is wrong !" :"Username is not found !",
+            msg: token ? 'Đăng nhập thành công !' : response ? "Sai mật khẩu !" :"Tài khoản không tồn tại !",
             token: token || null
         })
 
@@ -79,7 +79,7 @@ export const getUserInfoById = (userId) => new Promise(async(resolve, reject) =>
 export const getProductById = (sanphamId) => new Promise(async(resolve, reject) => {
     try{
         const response = await db.sanpham.findOne({
-            where: {id: sanphamId},
+            where: {id: sanphamId, status: 1},
             raw: true,
             attributes: ['productname', 'productprice'],
         })
@@ -107,7 +107,7 @@ export const addProductToShoppingCart = (size,sugar,ice,quantity,topping,price,k
         })
         resolve({
             err: 0 ,
-            msg: 'Successed to add the product to shopping cart !',
+            msg: 'Thêm sản phẩm vào giỏ hàng thành công !',
             response
         })
 
@@ -140,7 +140,7 @@ export const deleteDonHang = (donhangId) => {
               });
             resolve({
                 err: response === 1 ? 0 : 1,
-                msg: response === 1 ? 'Delete successfully!' : 'Failed to delete !',
+                msg: response === 1 ? 'Xóa sản phẩm thành công!' : 'Xóa sản phẩm thất bại !',
 
               });
         } catch (error) {
@@ -206,20 +206,47 @@ export const getNVGHById = (nvghId) => new Promise(async(resolve, reject) => {
     }
 })
 
-export const getAllHoaDon = (trangthaidonhang) => new Promise(async (resolve, reject) => {
+export const getAllHoaDon = (khachhangId, trangthaidonhang) => new Promise(async (resolve, reject) => {
     try {
         let response = ''
         if(trangthaidonhang === "ALL"){
-            response = await db.donhang.findAll()
+            response = await db.donhang.findAll(
+                {
+                    where: {khachhang_id: khachhangId}
+                }
+            )
         }else{
-            response = await db.hoadon.findAll({
-                where: {trangthaidonhang: trangthaidonhang},
-                raw: true
-            })
-        }
+            if(khachhangId === 0) {
+                response = await db.donhang.findAll(
+                    {
+                        where: {trangthaidonhang: trangthaidonhang}
+                    }
+                )
+            }else{
+                response = await db.hoadon.findAll({
+                    where: {trangthaidonhang: trangthaidonhang, khachhang_id: khachhangId},
+                    raw: true
+                })
+            }}
         resolve(response)
     } catch (error) {
         reject(error);
     }
 });
 
+
+export const getHoaDonByUserId = (userId) => new Promise(async(resolve, reject) => {
+    try{
+        const response = await db.hoadon.findAll({
+            where: {khachhang_id: userId},
+            raw: true,
+        })
+        resolve({
+            err: response ? 0 : 1,
+            msg: response ? 'OK' : 'Failed',
+            response
+        })
+    } catch (error) {
+        reject(error)
+    }
+})

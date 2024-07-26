@@ -144,3 +144,18 @@
     opacity: 0.5;
     cursor: pointer;
 }
+.BackToDSĐHbtn1{
+        border: none;
+        border-radius: 50px;
+        background-color: #e80889;
+        padding: 5px 20px;
+        margin-left: 50%;
+        margin-bottom: 30px;
+        margin-top: 20px;
+        font-size: 30px;
+        color: #ffd7ef;
+}
+.BackToDSĐHbtn1:hover{
+    opacity: 0.5;
+    cursor: pointer;
+}

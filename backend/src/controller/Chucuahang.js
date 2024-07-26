@@ -44,6 +44,15 @@ export const handleDeleteUser = async(req, res) =>{
         })
 }}
 
+export const handleGetAllHoaDonByTTDH = async(req, res) =>{
+    let trangthaidonhang = req.query.trangthaidonhang
+    let hoadons = await chucuahangService.getAllHoaDonByTTDH(trangthaidonhang)
+    return res.status(200).json({
+        err: 0,
+        msg: 'OK',
+        hoadons
+    })
+}
 //NVGH
 export const handleCreateNVGH = async(req, res) =>{
     const {username, password, fullname, address, phonenumber} = req.body
